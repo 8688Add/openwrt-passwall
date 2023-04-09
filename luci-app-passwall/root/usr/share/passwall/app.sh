@@ -402,7 +402,7 @@ run_dns2socks() {
 }
 
 run_chinadns_ng() {
-	local _listen_port _dns_china _dns_trust _chnlist _gfwlist _no_ipv6_rules _log_path _when_chnroute_default_dns _no_logic_log
+	local _listen_port _dns_china _dns_trust _chnlist _gfwlist _no_ipv6_rules _log_path _no_logic_log
 	eval_set_val $@
 	
 	local _LOG_FILE=$LOG_FILE
@@ -418,9 +418,6 @@ run_chinadns_ng() {
 			cp -a "${RULES_PATH}/chnlist" "${_chnlist_file}"
 			_extra_param="${_extra_param} -m ${_chnlist_file} -M -a"
 		}
-		#当使用中国列表外时的默认DNS
-		[ "$_when_chnroute_default_dns" = "remote" ] && _default_tag="gfw"
-		[ "$_when_chnroute_default_dns" = "direct" ] && _default_tag="chn"
 	}
 	
 	([ -n "$_chnlist" ] || [ -n "$_gfwlist" ]) && [ -s "${RULES_PATH}/gfwlist" ] && {
@@ -1203,8 +1200,7 @@ start_dns() {
 			_chnlist="${chnlist}" \
 			_gfwlist="${gfwlist}" \
 			_no_ipv6_rules="${_no_ipv6_rules}" \
-			_log_path="${TMP_PATH}/chinadns-ng.log" \
-			_when_chnroute_default_dns="${WHEN_CHNROUTE_DEFAULT_DNS}"
+			_log_path="${TMP_PATH}/chinadns-ng.log"
 
 		WHEN_CHNROUTE_DEFAULT_DNS="chinadns_ng"
 	}
@@ -1360,7 +1356,6 @@ acl_app() {
 									_gfwlist=$(echo "${tcp_proxy_mode}" | grep "gfwlist") \
 									_no_ipv6_rules="${_no_ipv6_rules}" \
 									_log_path="${TMP_ACL_PATH}/${sid}/chinadns-ng.log" \
-									_when_chnroute_default_dns="${when_chnroute_default_dns}" \
 									_no_logic_log=1
 
 								when_chnroute_default_dns="chinadns_ng"
